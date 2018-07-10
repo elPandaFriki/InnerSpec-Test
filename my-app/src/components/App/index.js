@@ -21,15 +21,16 @@ import './App.css';
 var interval;
 var wave = [];
 var cycle = false;
+var yx = 0;
 class App extends Component {
   state = {
     dataWindowSize: {
       x: 1000,
       y: 500
     },
-    samplingFrequency: 1,
-    initialDelay: 20,
-    period: 1,
+    samplingFrequency: 0.1,
+    initialDelay: 200,
+    period: 100,
     oscillationFrequency: 1,
     amplitude: 125,
     y: 0,
@@ -38,50 +39,50 @@ class App extends Component {
   }
   
   componentDidMount() {
-    this.middleLine();
+    this.xyAxis();
   }
 
-  middleLine = () => {
+  xyAxis = () => {
     var canvas = document.getElementById("myCanvas");
-    var middleLine = canvas.getContext("2d");
-    middleLine.beginPath();
-    middleLine.moveTo(0, canvas.height / 2);
-    middleLine.lineTo(canvas.width, canvas.height / 2);
-    middleLine.strokeStyle = "red";
-    middleLine.stroke();
+    var xAxis = canvas.getContext("2d");
+    xAxis.beginPath();
+    xAxis.moveTo(0, canvas.height / 2);
+    xAxis.lineTo(canvas.width, canvas.height / 2);
+    xAxis.strokeStyle = "red";
+    xAxis.stroke();
+    var yAxis = canvas.getContext("2d");
+    yAxis.beginPath();
+    yAxis.moveTo(0, 0);
+    yAxis.lineTo(0, canvas.height);
+    yAxis.strokeStyle = "blue";
+    yAxis.stroke();
   }
 
   waveFormula = (yx) => {
     var amplitude = this.state.amplitude;
     var period = this.state.period;
     var canvas = document.getElementById('myCanvas');
-    return ((canvas.height/2) - (amplitude * Math.sin(((2 * Math.PI) / period) * yx)));
+    return (canvas.height/2 - (amplitude * Math.sin(((2 * Math.PI) / period) * yx)));
   }
 
   waveSampling = (x, y, canvas, ctx) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.middleLine();
+    this.xyAxis();
     ctx.beginPath();
     ctx.moveTo(x, y);
-    var yx = 0;
     while (x <= canvas.width) {
       y = this.waveFormula(yx);
       wave.push({x: yx, y: y});
-      if ((canvas.height/2) < this.waveFormula(x+1) && (canvas.height/2) > this.waveFormula(x-1)) {
-        if (!cycle) {
-          wave.push({ cycle: true });
-          cycle = true;
-        } else cycle = false;
+      if (y === (canvas.height/2) && yx !== 0) {
+        wave.push({ cycle: true });
       }
       ctx.lineTo(x, y);
       x++;
       yx++;
     }
     this.setState({ y: y });
-    ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
     ctx.stroke();
-    console.log(wave);
   }
 
   waveSample = () => {
@@ -122,7 +123,7 @@ class App extends Component {
       var canvas = document.getElementById("myCanvas");
       var ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      this.middleLine();
+      this.xyAxis();
     });
   }
 
@@ -136,7 +137,7 @@ class App extends Component {
         y: document.getElementById('dataWindowsSizeY').value * 2,
       },
     }, () => {
-      this.middleLine();
+      this.xyAxis();
     });
   }
 
@@ -159,31 +160,31 @@ class App extends Component {
     return (
       <div className="App">
         <p>
-          <span style={{marginRight: 50}}>Oscillation Frequency</span>
+          <span style={{marginRight: 50}}>Oscillation Frequency (in Hz)</span>
           <input className="input" id="oscillationFrequency" type="number" value={oscillationFrequency} min="1" onChange={this.onFrequencyChange}/>
         </p>
         <p>
-          <span style={{marginRight: 10}}>Number of Periods / Cycles</span>
+          <span style={{marginRight: 10}}>Period / Distance between Max Amplitudes (in seconds)</span>
           <input className="input" id="period" type="number" value={period} min="1" onChange={this.onPeriodChange }/>
         </p>
         <p>
-          <span style={{marginRight: 95}}>Amplitude (cm)</span>
+          <span style={{marginRight: 95}}>Amplitude (in centimeters)</span>
           <input className="input" id="amplitude" type="number" value={amplitude / 2} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
-          <span style={{marginRight: 95}}>Initial Delay (s)</span>
+          <span style={{marginRight: 95}}>Initial Delay (in seconds)</span>
           <input className="input" id="initialDelay" type="number" value={initialDelay} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
-          <span style={{marginRight: 30}}>Sampling Frequency (s)</span>
+          <span style={{marginRight: 30}}>Sampling Frequency (in seconds)</span>
           <input className="input" id="samplingFrequency" type="number" value={samplingFrequency} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
-          <span style={{marginRight: 165}}>X (s)</span>
+          <span style={{marginRight: 150}}>X-axis (in milliseconds)</span>
           <input className="input" id="dataWindowsSizeX" type="number" value={dataWindowSize.x} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
-          <span style={{marginRight: 150}}>Y (cm)</span>
+          <span style={{marginRight: 150}}>Y-axis (in centimeters)</span>
           <input className="input" id="dataWindowsSizeY" type="number" value={dataWindowSize.y / 2} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
