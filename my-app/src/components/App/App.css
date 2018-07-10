@@ -28,5 +28,10 @@
 }
 
 #myCanvas {
-  border: 1px solid black;
+  border-left: 2px solid blue;
+  margin-top: 10px;
+}
+
+.input {
+  text-align: center;
 }
