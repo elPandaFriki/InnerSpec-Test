@@ -25,12 +25,12 @@ var yx = 0;
 class App extends Component {
   state = {
     dataWindowSize: {
-      x: 1000,
+      x: 1500,
       y: 500
     },
     samplingFrequency: 0.1,
     initialDelay: 200,
-    period: 100,
+    period: 1,
     oscillationFrequency: 1,
     amplitude: 125,
     y: 0,
@@ -59,10 +59,7 @@ class App extends Component {
   }
 
   waveFormula = (yx) => {
-    var amplitude = this.state.amplitude;
-    var period = this.state.period;
-    var canvas = document.getElementById('myCanvas');
-    return (canvas.height/2 - (amplitude * Math.sin(((2 * Math.PI) / period) * yx)));
+    return (this.state.dataWindowSize.y/2 - (this.state.amplitude * Math.sin(((2 * Math.PI) / this.state.period) * yx)));
   }
 
   waveSampling = (x, y, canvas, ctx) => {
@@ -73,8 +70,12 @@ class App extends Component {
     while (x <= canvas.width) {
       y = this.waveFormula(yx);
       wave.push({x: yx, y: y});
-      if (y === (canvas.height/2) && yx !== 0) {
+      if (y === (this.state.dataWindowSize.y/2) && yx !== 0) {
         wave.push({ cycle: true });
+      }
+      if (document.getElementById('myCanvas').width !== this.state.dataWindowSize.x) {
+        var sum = document.getElementById('myCanvas').width / this.state.dataWindowSize.x;
+        x += sum;
       }
       ctx.lineTo(x, y);
       x++;
@@ -92,7 +93,7 @@ class App extends Component {
       var x = 0;
       var y = this.state.y;
       if (y === 0) {
-        y = canvas.height / 2;
+        y = this.state.dataWindowSize.y / 2;
       }
       var initialDelay = this.state.initialDelay;
       var sample = this.state.sample;
@@ -113,8 +114,10 @@ class App extends Component {
   }
 
   stop = () => {
+    clearInterval(interval);
     wave = [];
     cycle = false;
+    yx = 0;
     this.setState({
       start: false,
       y: 0,
@@ -122,7 +125,7 @@ class App extends Component {
     }, () => {
       var canvas = document.getElementById("myCanvas");
       var ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, this.state.dataWindowSize.x, this.state.dataWindowSize.y);
       this.xyAxis();
     });
   }
@@ -137,7 +140,7 @@ class App extends Component {
         y: document.getElementById('dataWindowsSizeY').value * 2,
       },
     }, () => {
-      this.xyAxis();
+      this.stop();
     });
   }
 
@@ -145,6 +148,8 @@ class App extends Component {
     this.setState({
       oscillationFrequency: 1 / document.getElementById('period').value,
       period: document.getElementById('period').value
+    }, () => {
+      this.stop();
     })
   }
 
@@ -152,6 +157,8 @@ class App extends Component {
     this.setState({
       oscillationFrequency: document.getElementById('oscillationFrequency').value,
       period: 1 / document.getElementById('oscillationFrequency').value
+    }, () => {
+      this.stop();
     })
   }
 
@@ -191,7 +198,7 @@ class App extends Component {
           <button style={{marginRight: 10}} onClick={this.start}>Start</button>
           <button onClick={this.stop}>Stop</button>
         </p>
-        <canvas id="myCanvas" width={dataWindowSize.x} height={dataWindowSize.y}></canvas>
+        <canvas id="myCanvas" width={1000} height={500}></canvas>
       </div>
     );
   }
