@@ -31,6 +31,66 @@
   margin: 10px 50px;
 }
 
-.input {
+.fields {
+  display: grid;
+  grid-template-columns: 30% 20% 20% 30%;
+}
+
+.fieldTitle {
+  grid-column: 2/3;
+}
+
+.btn {
+  margin: 10px 5px;
+  padding: 10px;
+  border: none;
+  color: white;  
+  background-color: lightgray;
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: bolder;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.start-btn {
+  grid-column: 2/3;
+}
+
+.start-btn:hover {
+  background-color: green;
+  margin: 0;
+}
+
+.stop-btn {
+  grid-column: 3/4;
+}
+
+.stop-btn:hover {
+  background-color: red;
+  margin: 0;
+}
+
+.fieldInput {
+  width: 93%;
+  margin: 5px 10px;
+  box-shadow: none;
   text-align: center;
+}
+
+span {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+}
+
+a {
+  width: 100%;
+  grid-column: 2 / 4;
+  margin: 10px 0 25px 0;
+}
+
+.title {
+  font-weight: bolder;
+  font-size: 25px;
+  grid-column: 2/4;
+  margin: 0 0 20px 0;
 }

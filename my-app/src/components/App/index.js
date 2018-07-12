@@ -3,7 +3,7 @@ TO DO(s)
   1. Oscillation frequency. [done]
   2. Number of cycles (Period). [done]
   3. Initial delay. [done]
-  4. Data window size. [done partially]
+  4. Data window size. [done]
   5. Sampling frequency (optional). [done]
 
 Recap of wave physics:
@@ -30,7 +30,7 @@ class App extends Component {
     },
     samplingFrequency: 1,
     initialDelay: 0.125,
-    period: 0.5,
+    period: 0.75,
     oscillationFrequency: 2,
     amplitude: 0.25,
     y: 0,
@@ -175,38 +175,28 @@ class App extends Component {
     const { samplingFrequency, dataWindowSize, oscillationFrequency, period, initialDelay, amplitude } = this.state
     return (
       <div className="App">
-        <p>
-          <span style={{marginRight: 60}}>Oscillation Frequency (in Hz)</span>
-          <input className="input" id="oscillationFrequency" type="number" value={oscillationFrequency} min="1" onChange={this.onFrequencyChange}/>
-        </p>
-        <p>
-          <span style={{marginRight: 130}}>Period (in seconds)</span>
-          <input className="input" id="period" type="number" value={period} min="1" onChange={this.onPeriodChange }/>
-        </p>
-        <p>
-          <span style={{marginRight: 85}}>Amplitude (in centimeters)</span>
-          <input className="input" id="amplitude" type="number" value={amplitude / 2} min="0" onChange={this.onMeasureChange }/>
-        </p>
-        <p>
-          <span style={{marginRight: 95}}>Initial Delay (in seconds)</span>
-          <input className="input" id="initialDelay" type="number" value={initialDelay} min="0" onChange={this.onMeasureChange }/>
-        </p>
-        <p>
-          <span style={{marginRight: 30}}>Sampling Frequency (in seconds)</span>
-          <input className="input" id="samplingFrequency" type="number" value={samplingFrequency} min="0" onChange={this.onMeasureChange }/>
-        </p>
-        <p>
-          <span style={{marginRight: 130}}>X-axis (in seconds)</span>
-          <input className="input" id="dataWindowsSizeX" type="number" value={dataWindowSize.x} min="0" onChange={this.onMeasureChange }/>
-        </p>
-        <p>
-          <span style={{marginRight: 110}}>Y-axis (in centimeters)</span>
-          <input className="input" id="dataWindowsSizeY" type="number" value={dataWindowSize.y / 2} min="0" onChange={this.onMeasureChange }/>
-        </p>
-        <p>
-          <button style={{marginRight: 10}} onClick={this.start}>Start</button>
-          <button onClick={this.stop}>Stop</button>
-        </p>
+        <div className="fields">
+          <a href="https://www.innerspec.com/eu-es">
+            <img src="http://materplat.org/wp-content/uploads/innerspec.png" alt="InnerSpec Logo"/>
+          </a>
+          <span className="title">Sine Wave Calculator</span>
+          <span className="fieldTitle">Oscillation Frequency (in Hz)</span>
+          <input step="0.25" className="fieldInput" id="oscillationFrequency" type="number" value={oscillationFrequency} min="0" onChange={this.onFrequencyChange}/>
+          <span className="fieldTitle">Period (in seconds)</span>
+          <input step="0.25" className="fieldInput" id="period" type="number" value={period} min="0" onChange={this.onPeriodChange }/>
+          <span className="fieldTitle">Amplitude (in centimeters)</span>
+          <input step="0.25" className="fieldInput" id="amplitude" type="number" value={amplitude / 2} min="0" onChange={this.onMeasureChange }/>
+          <span className="fieldTitle">Initial Delay (in seconds)</span>
+          <input step="0.25" className="fieldInput" id="initialDelay" type="number" value={initialDelay} min="0" onChange={this.onMeasureChange }/>
+          <span className="fieldTitle">X-axis (in seconds)</span>
+          <input step="0.25" className="fieldInput" id="dataWindowsSizeX" type="number" value={dataWindowSize.x} min="0" onChange={this.onMeasureChange }/>
+          <span className="fieldTitle">Y-axis (in centimeters)</span>
+          <input step="0.25" className="fieldInput" id="dataWindowsSizeY" type="number" value={dataWindowSize.y / 2} min="0" onChange={this.onMeasureChange }/>
+          <span className="fieldTitle">Sampling Frequency (in seconds)</span>
+          <input step="0.25" className="fieldInput" id="samplingFrequency" type="number" value={samplingFrequency} min="0" onChange={this.onMeasureChange }/>
+          <button className="start-btn btn" onClick={this.start}>Start</button>
+          <button className="stop-btn btn" onClick={this.stop}>Stop</button>
+        </div>
         <canvas id="myCanvas" width={1000} height={500}></canvas>
       </div>
     );
