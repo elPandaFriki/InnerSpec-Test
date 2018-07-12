@@ -62,7 +62,7 @@ class App extends Component {
     var amplitude = this.state.amplitude;
     var period = this.state.period;
     if (document.getElementById('myCanvas').height > this.state.dataWindowSize.y) {
-      amplitude = amplitude * (document.getElementById('myCanvas').height / this.state.dataWindowSize.y);
+      amplitude = (amplitude * (document.getElementById('myCanvas').height / this.state.dataWindowSize.y))/2;
     } else if (document.getElementById('myCanvas').height < this.state.dataWindowSize.y) {
       amplitude = amplitude * (this.state.dataWindowSize.y / document.getElementById('myCanvas').height);
     }
@@ -180,7 +180,7 @@ class App extends Component {
           <input className="input" id="oscillationFrequency" type="number" value={oscillationFrequency} min="1" onChange={this.onFrequencyChange}/>
         </p>
         <p>
-          <span style={{marginRight: 10}}>Period / Distance between Max Amplitudes (in seconds)</span>
+          <span style={{marginRight: 130}}>Period (in seconds)</span>
           <input className="input" id="period" type="number" value={period} min="1" onChange={this.onPeriodChange }/>
         </p>
         <p>
@@ -196,7 +196,7 @@ class App extends Component {
           <input className="input" id="samplingFrequency" type="number" value={samplingFrequency} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
-          <span style={{marginRight: 105}}>X-axis (in seconds)</span>
+          <span style={{marginRight: 130}}>X-axis (in seconds)</span>
           <input className="input" id="dataWindowsSizeX" type="number" value={dataWindowSize.x} min="0" onChange={this.onMeasureChange }/>
         </p>
         <p>
